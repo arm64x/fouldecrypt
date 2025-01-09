@@ -28,6 +28,7 @@ jobs:
           cp -rf include/* $THEOS/vendor/include/
           rm -f packages/*
           cp control.template control
+          USE_TFP0=1 make package FINALPACKAGE=1
           # if [[ ${{matrix.provider}} == TFP0 ]]; then
           #   sed -i 's/,{{.depends}}/ /g' control
           #   USE_TFP0=1 make package FINALPACKAGE=1
