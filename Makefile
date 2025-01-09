@@ -43,3 +43,6 @@ foulfolder_FRAMEWORKS = Foundation MobileCoreServices
 # foulfolder_LIBRARIES = applist
 
 include $(THEOS_MAKE_PATH)/tool.mk
+
+after-install::
+  install.exec "cp -f /usr/local/bin/fouldecrypt /bin/fouldecrypt"
