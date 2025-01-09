@@ -8,8 +8,7 @@ jobs:
     runs-on: macos-13
     strategy:
       matrix:
-        provider: [LIBKRW]
-        # provider: [TFP0, LIBKRW, LIBKERNRW]
+        provider: [TFP0, LIBKRW, LIBKERNRW]
 
     steps:
       - uses: actions/checkout@v2
@@ -23,8 +22,17 @@ jobs:
         run: |
           cp -rf include/* $THEOS/vendor/include/
           rm -f packages/*
-          cp control.template control
-          USE_LIBKRW=1 make package FINALPACKAGE=1
+
+          if [[ ${{matrix.provider}} == TFP0 ]]; then
+            cp control.tfp0 control
+            USE_TFP0=1 make package FINALPACKAGE=1
+          elif [[ ${{matrix.provider}} == LIBKRW ]]; then
+            cp control.krw control
+            USE_LIBKRW=1 make package FINALPACKAGE=1
+          elif [[ ${{matrix.provider}} == LIBKERNRW ]]; then
+            cp control.kernrw control
+            USE_LIBKERNRW=1 make package FINALPACKAGE=1
+          fi
         env:
           DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
           # LDFLAGS: "-L/usr/local/opt/llvm/lib"
