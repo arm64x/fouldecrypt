@@ -1,3 +1,6 @@
+// foulfolder.m
+// Created by und3fined on 2025-Jan-09.
+
 #import <stdio.h>
 #import <spawn.h>
 #import <objc/runtime.h>
@@ -231,23 +234,23 @@ main(int argc, char *argv[])
     /* Sign the app bundle. */
     NSString *decryptSignPath = [tempPath stringByAppendingPathComponent:targetApp];
     NSString *decryptSign = [decryptSignPath stringByAppendingPathComponent:@"decrypt.day"];
-    [[NSFileManager defaultManager] createFileAtPath:decryptSign contents:[@"und3fined" dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+    [fileManager createFileAtPath:decryptSign contents:[@"und3fined" dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
 
     /* remove other files */
     NSString *mobileContainerManager = [tempPath stringByAppendingPathComponent:@".com.apple.mobile_container_manager.metadata.plist"];
     NSString *bundleMetadata = [tempPath stringByAppendingPathComponent:@"BundleMetadata.plist"];
     NSString *iTunesMetadata = [tempPath stringByAppendingPathComponent:@"iTunesMetadata.plist"];
-    [[NSFileManager defaultManager] removeItemAtPath:mobileContainerManager error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:bundleMetadata error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:iTunesMetadata error:nil];
+    [fileManager removeItemAtPath:mobileContainerManager error:nil];
+    [fileManager removeItemAtPath:bundleMetadata error:nil];
+    [fileManager removeItemAtPath:iTunesMetadata error:nil];
 
     /* zip: archive */
     NSString *archiveName =
         [NSString stringWithFormat:@"%@_%@_und3fined.ipa", appBundleId, appVersion];
     NSString *archivePath =
-        [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:archiveName];
+        [[fileManager currentDirectoryPath] stringByAppendingPathComponent:archiveName];
 
-    BOOL didClean = [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
+        BOOL didClean = [fileManager removeItemAtPath:archivePath error:nil];
     fprintf(stderr, "[archive] Creating %s file...\n", [archiveName UTF8String]);
 
     int zipStatus =
@@ -259,7 +262,8 @@ main(int argc, char *argv[])
 
     fprintf(stderr, "[archive] Archive -> %s\n", [archiveName UTF8String]);
     fprintf(stderr, "[clean] Remove temp %s\n", [[tempURL path] UTF8String]);
-    [[NSFileManager defaultManager] removeItemAtPath:[tempURL path] error:nil];
+    [fileManager removeItemAtPath:[tempURL path] error:nil];
+    // [fileManager removeItemAtPath:targetPath error:nil];
 
     if (zipStatus != 0) {
         fprintf(stderr, "cannot create archive: %s\n", [[error localizedDescription] UTF8String]);
