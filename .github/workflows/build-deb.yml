@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-14
     strategy:
       matrix:
         # provider: [TFP0, LIBKRW, LIBKERNRW]
@@ -30,19 +30,19 @@ jobs:
           cp control.template control
           if [[ ${{matrix.provider}} == TFP0 ]]; then
             sed -i 's/,{{.depends}}//g' control
-            USE_TFP0=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+            USE_TFP0=1 make package FINALPACKAGE=1
           elif [[ ${{matrix.provider}} == LIBKRW ]]; then
             sed -i 's/{{.depends}}/libkrw/g' control
-            USE_LIBKRW=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+            USE_LIBKRW=1 make package FINALPACKAGE=1
           elif [[ ${{matrix.provider}} == LIBKERNRW ]]; then
             sed -i 's/{{.depends}}/libkernrw0/g' control
-            USE_LIBKERNRW=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+            USE_LIBKERNRW=1 make package FINALPACKAGE=1
           fi
         # env:
           # DEVELOPER_DIR=/Applications/Xcode-11.7.app/Contents/Developer
           # DEVELOPER_DIR: ${{ secrets.DEVELOPER_DIR_12 }}
       - name: Publish artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: fouldecrypt-${{matrix.provider}}
           path: ${{ github.workspace }}/packages/*.deb
