@@ -138,9 +138,9 @@ main(int argc, char *argv[])
 
     NSError *error = nil;
     /* Make a copy of app bundle. */
-    NSURL *tempURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory
+    NSURL *tempURL = [fileManager URLForDirectory:NSItemReplacementDirectory
                                                             inDomain:NSUserDomainMask
-                                                   appropriateForURL:[NSURL fileURLWithPath:[[NSFileManager defaultManager] currentDirectoryPath]]
+                                                   appropriateForURL:[NSURL fileURLWithPath:[fileManager currentDirectoryPath]]
                                                               create:YES
                                                               error:&error];
     if (!tempURL) {
@@ -151,14 +151,14 @@ main(int argc, char *argv[])
     }
 
     NSString *tempPath = [[tempURL path] stringByAppendingPathComponent:@"Payload"];
-    BOOL didCopy = [[NSFileManager defaultManager] copyItemAtPath:targetPath toPath:tempPath error:&error];
+    BOOL didCopy = [fileManager copyItemAtPath:targetPath toPath:tempPath error:&error];
     if (!didCopy) {
         fprintf(stderr, "cannot copy app bundle: %s\n", [[error localizedDescription] UTF8String]);
         return 1;
     }
 
     /* Enumerate entire app bundle to find all Mach-Os. */
-    NSEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:tempPath];
+    NSEnumerator *enumerator = [fileManager enumeratorAtPath:tempPath];
     NSString *objectPath = nil;
     BOOL didError = 0;
     NSNumber *decryptCount = [NSNumber numberWithInteger: 0];
