@@ -12,8 +12,8 @@ jobs:
     runs-on: macos-14
     strategy:
       matrix:
+        provider: [TFP0]
         # provider: [TFP0, LIBKRW, LIBKERNRW]
-        provider: [TFP0, LIBKRW, LIBKERNRW]
 
     steps:
       - uses: actions/checkout@v2
@@ -28,16 +28,16 @@ jobs:
           cp -rf include/* $THEOS/vendor/include/
           rm -f packages/*
           cp control.template control
-          if [[ ${{matrix.provider}} == TFP0 ]]; then
-            sed -i 's/,{{.depends}}/ /g' control
-            USE_TFP0=1 make package FINALPACKAGE=1
-          elif [[ ${{matrix.provider}} == LIBKRW ]]; then
-            sed -i 's/{{.depends}}/altlist,libkrw/g' control
-            USE_LIBKRW=1 make package FINALPACKAGE=1
-          elif [[ ${{matrix.provider}} == LIBKERNRW ]]; then
-            sed -i 's/{{.depends}}/altlist,libkernrw0/g' control
-            USE_LIBKERNRW=1 make package FINALPACKAGE=1
-          fi
+          # if [[ ${{matrix.provider}} == TFP0 ]]; then
+          #   sed -i 's/,{{.depends}}/ /g' control
+          #   USE_TFP0=1 make package FINALPACKAGE=1
+          # elif [[ ${{matrix.provider}} == LIBKRW ]]; then
+          #   sed -i 's/{{.depends}}/altlist,libkrw/g' control
+          #   USE_LIBKRW=1 make package FINALPACKAGE=1
+          # elif [[ ${{matrix.provider}} == LIBKERNRW ]]; then
+          #   sed -i 's/{{.depends}}/altlist,libkernrw0/g' control
+          #   USE_LIBKERNRW=1 make package FINALPACKAGE=1
+          # fi
         # env:
           # DEVELOPER_DIR=/Applications/Xcode-11.7.app/Contents/Developer
           # DEVELOPER_DIR: ${{ secrets.DEVELOPER_DIR_12 }}

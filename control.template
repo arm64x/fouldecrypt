@@ -2,7 +2,7 @@ Package: dev.und3fy.fouldecrypt
 Name: fouldecrypt
 Version: 0.0.7
 Architecture: iphoneos-arm64
-Depends: zip,{{.depends}}
+Depends: zip
 Description: Directly decrypt binaries like flexdecrypt, but also supports iOS 16
 Maintainer: und3fined
 Author: misty
