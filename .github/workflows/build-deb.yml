@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-13
     strategy:
       matrix:
-        provider: [TFP0]
+        provider: [LIBKRW]
         # provider: [TFP0, LIBKRW, LIBKERNRW]
 
     steps:
@@ -24,13 +24,13 @@ jobs:
           cp -rf include/* $THEOS/vendor/include/
           rm -f packages/*
           cp control.template control
-          USE_TFP0=1 make package FINALPACKAGE=1
+          USE_LIBKRW=1 make package FINALPACKAGE=1
         env:
           DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
-          LDFLAGS: "-L/usr/local/opt/llvm/lib"
-          CPPFLAGS: "-I/usr/local/opt/llvm/include"
+          # LDFLAGS: "-L/usr/local/opt/llvm/lib"
+          # CPPFLAGS: "-I/usr/local/opt/llvm/include"
       - name: Publish artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fouldecrypt-${{matrix.provider}}
+          name: foulfolder-${{matrix.provider}}
           path: ${{ github.workspace }}/packages/*.deb
