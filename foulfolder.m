@@ -229,16 +229,9 @@ main(int argc, char *argv[])
 
 
     /* Sign the app bundle. */
-    NSString *decryptSign = [tempPath stringByAppendingPathComponent:@"decrypt.day"];
+    NSString *decryptSignPath = [tempPath stringByAppendingPathComponent:targetApp];
+    NSString *decryptSign = [decryptSignPath stringByAppendingPathComponent:@"decrypt.day"];
     [[NSFileManager defaultManager] createFileAtPath:decryptSign contents:[@"und3fined" dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
-
-    // NSString *infoPlistPath = [tempPath stringByAppendingPathComponent:@"Info.plist"];
-    // NSMutableDictionary *infoPlist = [NSMutableDictionary dictionaryWithContentsOfFile:infoPlistPath];
-    // assert(infoPlist);
-
-    // /* Remove UISupportedDevices in Info.plist file */
-    // [infoPlist removeObjectForKey:@"UISupportedDevices"];
-    // [infoPlist writeToFile:infoPlistPath atomically:YES];
 
     /* remove other files */
     NSString *mobileContainerManager = [tempPath stringByAppendingPathComponent:@".com.apple.mobile_container_manager.metadata.plist"];
@@ -250,7 +243,7 @@ main(int argc, char *argv[])
 
     /* zip: archive */
     NSString *archiveName =
-        [NSString stringWithFormat:@"%@_%@_dump.ipa", appBundleId, appVersion];
+        [NSString stringWithFormat:@"%@_%@_und3fined.ipa", appBundleId, appVersion];
     NSString *archivePath =
         [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:archiveName];
 
