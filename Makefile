@@ -40,7 +40,7 @@ foulfolder_CODESIGN_FLAGS = -Sentitlements.plist
 foulfolder_INSTALL_PATH = /usr/local/bin
 foulfolder_FRAMEWORKS = Foundation MobileCoreServices
 
-fouldlopen_FILES = fouldlopen.m
+fouldlopen_FILES = fouldlopen.c
 fouldlopen_INSTALL_PATH = /usr/local/bin
 
 include $(THEOS_MAKE_PATH)/tool.mk
