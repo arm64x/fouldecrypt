@@ -26,66 +26,103 @@ static int VERBOSE = 0;
 
 extern char **environ;
 
+static NSString *shared_shell_path(void)
+{
+  static NSString *_sharedShellPath = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{ @autoreleasepool {
+    NSArray <NSString *> *possibleShells = @[
+      @"/usr/bin/bash",
+      @"/bin/bash",
+      @"/usr/bin/sh",
+      @"/bin/sh",
+      @"/usr/bin/zsh",
+      @"/bin/zsh",
+      @"/var/jb/usr/bin/bash",
+      @"/var/jb/bin/bash",
+      @"/var/jb/usr/bin/sh",
+      @"/var/jb/bin/sh",
+      @"/var/jb/usr/bin/zsh",
+      @"/var/jb/bin/zsh",
+    ];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    for (NSString *shellPath in possibleShells) {
+      // check if the shell exists and is regular file (not symbolic link) and executable
+      NSDictionary <NSFileAttributeKey, id> *shellAttrs = [fileManager attributesOfItemAtPath:shellPath error:nil];
+      if ([shellAttrs[NSFileType] isEqualToString:NSFileTypeSymbolicLink]) {
+        continue;
+      }
+      if (![fileManager isExecutableFileAtPath:shellPath]) {
+        continue;
+      }
+      _sharedShellPath = shellPath;
+      break;
+    }
+  } });
+  return _sharedShellPath;
+}
+
 int
 my_system(const char *ctx)
 {
-    const char *args[] = {
-        "/bin/sh",
-        "-c",
-        ctx,
-        NULL
-    };
-    pid_t pid;
-    int posix_status = posix_spawn(&pid, "/bin/sh", NULL, NULL, (char **) args, environ);
-    if (posix_status != 0)
+  const char *shell_path = [shared_shell_path() UTF8String];
+  const char *args[] = {
+      shell_path,
+      "-c",
+      ctx,
+      NULL
+  };
+  pid_t pid;
+  int posix_status = posix_spawn(&pid, shell_path, NULL, NULL, (char **) args, environ);
+  if (posix_status != 0)
+  {
+      errno = posix_status;
+      fprintf(stderr, "posix_spawn, %s (%d)\n", strerror(errno), errno);
+      return posix_status;
+  }
+  pid_t w;
+  int status;
+  do
+  {
+    w = waitpid(pid, &status, WUNTRACED | WCONTINUED);
+    if (w == -1)
     {
-        errno = posix_status;
-        fprintf(stderr, "posix_spawn, %s (%d)\n", strerror(errno), errno);
-        return posix_status;
+      fprintf(stderr, "waitpid %d, %s (%d)\n", pid, strerror(errno), errno);
+      return errno;
     }
-    pid_t w;
-    int status;
-    do
+    if (WIFEXITED(status))
     {
-        w = waitpid(pid, &status, WUNTRACED | WCONTINUED);
-        if (w == -1)
-        {
-            fprintf(stderr, "waitpid %d, %s (%d)\n", pid, strerror(errno), errno);
-            return errno;
-        }
-        if (WIFEXITED(status))
-        {
-            if (WEXITSTATUS(status) != 0)
-            {
-                fprintf(stderr, "pid %d, exited with status %d\n", pid, WEXITSTATUS(status));
-                return WEXITSTATUS(status);
-            }
-        }
-        else if (WIFSIGNALED(status))
-        {
-            fprintf(stderr, "pid %d killed by signal %d\n", pid, WTERMSIG(status));
-        }
-        else if (WIFSTOPPED(status))
-        {
-            fprintf(stderr, "pid %d stopped by signal %d\n", pid, WSTOPSIG(status));
-        }
-        // else if (WIFCONTINUED(status))
-        // {
-        //     // fprintf(stderr, "pid %d continued\n", pid);
-        // }
+      if (WEXITSTATUS(status) != 0)
+      {
+        fprintf(stderr, "pid %d, exited with status %d\n", pid, WEXITSTATUS(status));
+        return WEXITSTATUS(status);
+      }
     }
-    while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    if (WIFSIGNALED(status))
+    else if (WIFSIGNALED(status))
     {
-        return WTERMSIG(status);
+      fprintf(stderr, "pid %d killed by signal %d\n", pid, WTERMSIG(status));
     }
-    return WEXITSTATUS(status);
+    else if (WIFSTOPPED(status))
+    {
+      fprintf(stderr, "pid %d stopped by signal %d\n", pid, WSTOPSIG(status));
+    }
+    // else if (WIFCONTINUED(status))
+    // {
+    //     // fprintf(stderr, "pid %d continued\n", pid);
+    // }
+  }
+  while (!WIFEXITED(status) && !WIFSIGNALED(status));
+  if (WIFSIGNALED(status))
+  {
+    return WTERMSIG(status);
+  }
+  return WEXITSTATUS(status);
 }
 
 NSString *
 escape_arg(NSString *arg)
 {
-    return [arg stringByReplacingOccurrencesOfString:@"\'" withString:@"'\\\''"];
+  return [arg stringByReplacingOccurrencesOfString:@"\'" withString:@"'\\\''"];
 }
 
 int
@@ -211,8 +248,10 @@ main(int argc, char *argv[])
             NSString *objectRawPath = [targetPath stringByAppendingPathComponent:objectPath];
 
             int decryptStatus =
+                my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
                 my_system([[NSString stringWithFormat:@"fouldecrypt -v '%@' '%@'", escape_arg(objectRawPath), escape_arg(
                     objectFullPath)] UTF8String]);
+
             if (decryptStatus != 0) {
                 didError = decryptStatus;
                 fprintf(stderr, "[dump] %s: Failed\n", [objectPath UTF8String]);
