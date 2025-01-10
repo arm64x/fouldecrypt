@@ -206,7 +206,7 @@ main(int argc, char *argv[])
             NSString *objectRawPath = [targetPath stringByAppendingPathComponent:objectPath];
 
             int decryptStatus =
-                my_system([[NSString stringWithFormat:@"fouldecrypt '%@' '%@'", escape_arg(objectRawPath), escape_arg(
+                my_system([[NSString stringWithFormat:@"fouldecrypt -v '%@' '%@'", escape_arg(objectRawPath), escape_arg(
                     objectFullPath)] UTF8String]);
             if (decryptStatus != 0) {
                 didError = decryptStatus;
