@@ -114,7 +114,7 @@ int __mremap_encrypted(const char *info, void *base, size_t cryptsize,
   DLOG("<<-- %s mremap_encrypted(%p, 0x%zx, %d, 0x%x, 0x%x)", info, base,
        cryptsize, cryptid, cpuType, cpuSubType);
   int ret = mremap_encrypted(base, cryptsize, cryptid, cpuType, cpuSubType);
-  if (ret != 0 && ret != -1) {
+  if (ret) {
     perror("mremap_encrypted");
   }
   DLOG("-->> %s mremap_encrypted(%p, 0x%zx, %d, 0x%x, 0x%x) = %d", info, base,
