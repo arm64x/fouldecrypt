@@ -268,6 +268,7 @@ main(int argc, char *argv[])
                 escape_arg(objectRawPath),
                 escape_arg(objectFullPath)
               ] UTF8String]);
+            }
 
             if (decryptStatus != 0) {
                 didError = decryptStatus;
