@@ -97,15 +97,20 @@ main(int argc, char *argv[])
         return 1;
     }
 
-    NSString *internalAppPath = @"/private/var/containers/Bundle/Application/";
+    NSString *internalAppPath = @"/var/containers/Bundle/Application/";
     NSString *keyItemName = @"itemName";
     NSString *keyBundleId = @"softwareVersionBundleId";
 
     BOOL isAppPath = NO;
     // check argument is path or bundle id.
     // path always start with /private/var/containers/Bundle/Application
-    if (strncmp(argv[1], [internalAppPath UTF8String], internalAppPath.length) == 0)
-    {
+
+    // private var path always start with /private/var and join with internalAppPath
+    NSString *privateVarAppPath = [@"/private" stringByAppendingPathComponent:internalAppPath];
+    if (
+      strncmp(argv[1], [internalAppPath UTF8String], internalAppPath.length) == 0 ||
+      strncmp(argv[1], [privateVarAppPath UTF8String], privateVarAppPath.length) == 0
+    ) {
         isAppPath = YES;
     }
 
