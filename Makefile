@@ -4,7 +4,7 @@ export ADDITIONAL_CFLAGS = -DTHEOS_LEAN_AND_MEAN -fobjc-arc
 
 include $(THEOS)/makefiles/common.mk
 
-TOOL_NAME = fouldecrypt flexdecrypt2 foulwrapper foulfolder
+TOOL_NAME = fouldecrypt flexdecrypt2 foulwrapper foulfolder fouldlopen
 
 fouldecrypt_FILES = main.cpp foulmain.cpp
 fouldecrypt_CFLAGS = -fobjc-arc -Wno-unused-variable -Ipriv_include
@@ -39,10 +39,8 @@ foulfolder_CCFLAGS = $(foulfolder_CFLAGS)
 foulfolder_CODESIGN_FLAGS = -Sentitlements.plist
 foulfolder_INSTALL_PATH = /usr/local/bin
 foulfolder_FRAMEWORKS = Foundation MobileCoreServices
-# foulfolder_PRIVATE_FRAMEWORKS = MobileContainerManager
-# foulfolder_LIBRARIES = applist
+
+fouldlopen_FILES = fouldlopen.c
+fouldlopen_INSTALL_PATH = /usr/local/bin
 
 include $(THEOS_MAKE_PATH)/tool.mk
-
-after-install::
-	install.exec "cp -f /usr/local/bin/fouldecrypt /bin/fouldecrypt"

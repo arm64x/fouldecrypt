@@ -1,6 +1,6 @@
 Package: dev.und3fy.foulfolder.unc0ver
 Name: foulfolder (unc0ver)
-Version: 0.1.4
+Version: 0.1.5d
 Architecture: iphoneos-arm
 Depends: applist,zip,libkrw
 Description: Directly decrypt binaries like fouldecrypt, but also supports iOS 14
