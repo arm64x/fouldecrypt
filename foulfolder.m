@@ -130,8 +130,14 @@ main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        fprintf(stderr, "usage: foulfolder <application path or bundle_id>\n");
+        fprintf(stderr, "usage: foulfolder [-v] <application path or bundle_id>\n");
         return 1;
+    }
+
+    if (argc == 3 && strcmp(argv[1], "-v") == 0)
+    {
+      VERBOSE = 1;
+      argv++;
     }
 
     NSString *internalAppPath = @"/var/containers/Bundle/Application/";
@@ -249,8 +255,19 @@ main(int argc, char *argv[])
 
             int decryptStatus =
                 my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
-                my_system([[NSString stringWithFormat:@"fouldecrypt -v '%@' '%@'", escape_arg(objectRawPath), escape_arg(
-                    objectFullPath)] UTF8String]);
+
+            if (VERBOSE) {
+              decryptStatus = my_system([[
+                NSString stringWithFormat:@"fouldecrypt -v '%@' '%@'",
+                escape_arg(objectRawPath),
+                escape_arg(objectFullPath)
+              ] UTF8String]);
+            } else {
+              decryptStatus = my_system([[
+                NSString stringWithFormat:@"fouldecrypt '%@' '%@'",
+                escape_arg(objectRawPath),
+                escape_arg(objectFullPath)
+              ] UTF8String]);
 
             if (decryptStatus != 0) {
                 didError = decryptStatus;
