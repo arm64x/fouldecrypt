@@ -215,7 +215,7 @@ main(int argc, char *argv[])
     NSNumber *decryptCount = [NSNumber numberWithInteger: 0];
     while (objectPath = [enumerator nextObject])
     {
-      if ([objectPath containtsString:@"libswift"]) {
+      if ([objectPath containsString:@"libswift"]) {
         continue;
       }
 
