@@ -215,72 +215,72 @@ main(int argc, char *argv[])
     NSNumber *decryptCount = [NSNumber numberWithInteger: 0];
     while (objectPath = [enumerator nextObject])
     {
-        NSString *objectFullPath = [tempPath stringByAppendingPathComponent:objectPath];
-        FILE *fp = fopen(objectFullPath.UTF8String, "rb");
-        if (!fp)
-        {
-            perror("fopen");
-            continue;
-        }
+      if ([objectPath containtsString:@"libswift"]) {
+        continue;
+      }
 
-        int num = getw(fp);
-        if (num == EOF)
-        {
-            fclose(fp);
-            continue;
-        }
+      NSString *objectFullPath = [tempPath stringByAppendingPathComponent:objectPath];
+      FILE *fp = fopen(objectFullPath.UTF8String, "rb");
+      if (!fp) {
+        perror("fopen");
+        continue;
+      }
 
-        if (
-            [objectPath containsString:@".app/Info.plist"]
-        ) {
-            fclose(fp);
-            fprintf(stderr, "[change] %s: Remove UISupportedDevices\n", [objectPath UTF8String]);
-            NSMutableDictionary *infoPlist = [NSMutableDictionary dictionaryWithContentsOfFile:objectFullPath];
-            [infoPlist removeObjectForKey:@"UISupportedDevices"];
-            [infoPlist writeToFile:objectPath atomically:YES];
-            continue;
-        }
-
-        if (
-            num == MH_MAGIC_64 ||
-            num == MH_MAGIC ||
-            num == FAT_MAGIC_64 ||
-            num == FAT_MAGIC ||
-            num == MH_CIGAM ||
-            num == MH_CIGAM_64 ||
-            num == FAT_CIGAM ||
-            num == FAT_CIGAM_64
-        ) {
-            NSString *objectRawPath = [targetPath stringByAppendingPathComponent:objectPath];
-
-            int decryptStatus =
-                my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
-
-            if (VERBOSE) {
-              decryptStatus = my_system([[
-                NSString stringWithFormat:@"fouldecrypt -v '%@' '%@'",
-                escape_arg(objectRawPath),
-                escape_arg(objectFullPath)
-              ] UTF8String]);
-            } else {
-              decryptStatus = my_system([[
-                NSString stringWithFormat:@"fouldecrypt '%@' '%@'",
-                escape_arg(objectRawPath),
-                escape_arg(objectFullPath)
-              ] UTF8String]);
-            }
-
-            if (decryptStatus != 0) {
-                didError = decryptStatus;
-                fprintf(stderr, "[dump] %s: Failed\n", [objectPath UTF8String]);
-                break;
-            }
-
-            decryptCount = [NSNumber numberWithInteger: [decryptCount integerValue] + 1];
-            fprintf(stderr, "[dump] %s: Success\n", [objectPath UTF8String]);
-        }
-
+      int num = getw(fp);
+      if (num == EOF) {
         fclose(fp);
+        continue;
+      }
+
+      if ([objectPath containsString:@".app/Info.plist"]) {
+        fclose(fp);
+        fprintf(stderr, "[change] %s: Remove UISupportedDevices\n", [objectPath UTF8String]);
+        NSMutableDictionary *infoPlist = [NSMutableDictionary dictionaryWithContentsOfFile:objectFullPath];
+        [infoPlist removeObjectForKey:@"UISupportedDevices"];
+        [infoPlist writeToFile:objectPath atomically:YES];
+        continue;
+      }
+
+      if (
+        num == MH_MAGIC_64 ||
+        num == MH_MAGIC ||
+        num == FAT_MAGIC_64 ||
+        num == FAT_MAGIC ||
+        num == MH_CIGAM ||
+        num == MH_CIGAM_64 ||
+        num == FAT_CIGAM ||
+        num == FAT_CIGAM_64
+      ) {
+        NSString *objectRawPath = [targetPath stringByAppendingPathComponent:objectPath];
+
+        int decryptStatus =
+            my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
+
+        if (VERBOSE) {
+          decryptStatus = my_system([[
+            NSString stringWithFormat:@"fouldecrypt -v '%@' '%@'",
+            escape_arg(objectRawPath),
+            escape_arg(objectFullPath)
+          ] UTF8String]);
+        } else {
+          decryptStatus = my_system([[
+            NSString stringWithFormat:@"fouldecrypt '%@' '%@'",
+            escape_arg(objectRawPath),
+            escape_arg(objectFullPath)
+          ] UTF8String]);
+        }
+
+        if (decryptStatus != 0) {
+            didError = decryptStatus;
+            fprintf(stderr, "[dump] %s: Failed\n", [objectPath UTF8String]);
+            break;
+        }
+
+        decryptCount = [NSNumber numberWithInteger: [decryptCount integerValue] + 1];
+        fprintf(stderr, "[dump] %s: Success\n", [objectPath UTF8String]);
+      }
+
+      fclose(fp);
     }
 
     if (didError) {
