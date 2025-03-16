@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-13
     strategy:
       matrix:
-        provider: [TFP0 LIBKRW LIBKERNRW]
+        provider: [TFP0, LIBKRW, LIBKERNRW]
 
     steps:
       - uses: actions/checkout@v2
