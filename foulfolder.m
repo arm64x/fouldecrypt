@@ -232,14 +232,14 @@ main(int argc, char *argv[])
         continue;
       }
 
-      if ([objectPath containsString:@".app/Info.plist"]) {
-        fclose(fp);
-        fprintf(stderr, "[change] %s: Remove UISupportedDevices\n", [objectPath UTF8String]);
-        NSMutableDictionary *infoPlist = [NSMutableDictionary dictionaryWithContentsOfFile:objectFullPath];
-        [infoPlist removeObjectForKey:@"UISupportedDevices"];
-        [infoPlist writeToFile:objectPath atomically:YES];
-        continue;
-      }
+      // if ([objectPath containsString:@".app/Info.plist"]) {
+      //   fclose(fp);
+      //   fprintf(stderr, "[change] %s: Remove UISupportedDevices\n", [objectPath UTF8String]);
+      //   NSMutableDictionary *infoPlist = [NSMutableDictionary dictionaryWithContentsOfFile:objectFullPath];
+      //   [infoPlist removeObjectForKey:@"UISupportedDevices"];
+      //   [infoPlist writeToFile:objectPath atomically:YES];
+      //   continue;
+      // }
 
       if (
         num == MH_MAGIC_64 ||

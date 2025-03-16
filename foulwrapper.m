@@ -148,7 +148,7 @@ main(int argc, char *argv[])
         return 1;
     }
 
-    fprintf(stderr, "[start] Target app -> %s\n", [targetId UTF8String]);  
+    fprintf(stderr, "[start] Target app -> %s\n", [targetId UTF8String]);
 
     /* Make a copy of app bundle. */
     NSURL *tempURL = [[NSFileManager defaultManager] URLForDirectory:NSItemReplacementDirectory
@@ -192,16 +192,16 @@ main(int argc, char *argv[])
             continue;
         }
 
-        if (
-            [objectPath containsString:@".app/Info.plist"]
-        ) {
-            fclose(fp);
-            fprintf(stderr, "[change] %s: Remove UISupportedDevices\n", [objectPath UTF8String]);
-            NSMutableDictionary *infoPlist = [NSMutableDictionary dictionaryWithContentsOfFile:objectFullPath];
-            [infoPlist removeObjectForKey:@"UISupportedDevices"];
-            [infoPlist writeToFile:objectPath atomically:YES];
-            continue;
-        }
+        // if (
+        //     [objectPath containsString:@".app/Info.plist"]
+        // ) {
+        //     fclose(fp);
+        //     fprintf(stderr, "[change] %s: Remove UISupportedDevices\n", [objectPath UTF8String]);
+        //     NSMutableDictionary *infoPlist = [NSMutableDictionary dictionaryWithContentsOfFile:objectFullPath];
+        //     [infoPlist removeObjectForKey:@"UISupportedDevices"];
+        //     [infoPlist writeToFile:objectPath atomically:YES];
+        //     continue;
+        // }
 
         if (
             num == MH_MAGIC_64 ||
@@ -262,7 +262,7 @@ main(int argc, char *argv[])
     [[NSFileManager defaultManager] removeItemAtPath:mobileContainerManager error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:bundleMetadata error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:iTunesMetadata error:nil];
-    
+
     /* zip: archive */
     NSString *archiveName =
         [NSString stringWithFormat:@"%@_%@_dump.ipa", targetId, [appProxy shortVersionString]];
