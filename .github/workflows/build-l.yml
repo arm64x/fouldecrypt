@@ -25,12 +25,15 @@ jobs:
 
           if [[ ${{matrix.provider}} == TFP0 ]]; then
             cp control.tfp0 control
+            sed -i'' -e 's/iphoneos-arm/iphoneos-arm64/g' control
             USE_TFP0=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           elif [[ ${{matrix.provider}} == LIBKRW ]]; then
             cp control.krw control
+            sed -i'' -e 's/iphoneos-arm/iphoneos-arm64/g' control
             USE_LIBKRW=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           elif [[ ${{matrix.provider}} == LIBKERNRW ]]; then
             cp control.kernrw control
+            sed -i'' -e 's/iphoneos-arm/iphoneos-arm64/g' control
             USE_LIBKERNRW=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           fi
         env:
