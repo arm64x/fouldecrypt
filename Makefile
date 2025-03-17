@@ -31,7 +31,6 @@ foulwrapper_CODESIGN_FLAGS = -Sentitlements.plist
 foulwrapper_INSTALL_PATH = /usr/local/bin
 foulwrapper_FRAMEWORKS = Foundation MobileCoreServices
 foulwrapper_PRIVATE_FRAMEWORKS = MobileContainerManager
-foulwrapper_LIBRARIES = applist
 
 foulfolder_FILES = foulfolder.m
 foulfolder_CFLAGS = -fobjc-arc -Wno-unused-variable -Ix_include
