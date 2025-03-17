@@ -1,0 +1,44 @@
+name: Rootless Build
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: macos-13
+    strategy:
+      matrix:
+        provider: [TFP0, LIBKRW, LIBKERNRW]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Prepare Theos
+        uses: und3fined/theos-action@main
+
+      - name: Build package
+        run: |
+          cp -rf include/* $THEOS/vendor/include/
+          rm -f packages/*
+
+          if [[ ${{matrix.provider}} == TFP0 ]]; then
+            cp control.tfp0 control
+            USE_TFP0=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          elif [[ ${{matrix.provider}} == LIBKRW ]]; then
+            cp control.krw control
+            USE_LIBKRW=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          elif [[ ${{matrix.provider}} == LIBKERNRW ]]; then
+            cp control.kernrw control
+            USE_LIBKERNRW=1 make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          fi
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_14.2.app/Contents/Developer
+          # LDFLAGS: "-L/usr/local/opt/llvm/lib"
+          # CPPFLAGS: "-I/usr/local/opt/llvm/include"
+      - name: Publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: foulfolder-${{matrix.provider}}
+          path: ${{ github.workspace }}/packages/*.deb
