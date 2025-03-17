@@ -1,6 +1,6 @@
 Package: dev.und3fy.foulfolder
 Name: foulfolder (tfp0)
-Version: 0.2.1a
+Version: 0.2.1
 Architecture: iphoneos-arm
 Depends: zip
 Description: Directly decrypt binaries like fouldecrypt, but also supports iOS 14
