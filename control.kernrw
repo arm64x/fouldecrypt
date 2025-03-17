@@ -8,3 +8,4 @@ Maintainer: und3fined
 Author: misty
 Section: System
 Tag: role::hacker
+Conflicts: moe.misty.fouldecrypt, dev.und3fy.foulfolder.unc0ver, dev.und3fy.foulfolder
