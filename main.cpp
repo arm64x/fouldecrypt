@@ -22,7 +22,7 @@
 #define PAGE_SIZE 0x4000
 #define EXEC_PAGE_SIZE 0x1000
 
-int VERBOSE = 1;
+int VERBOSE = 0;
 #define DLOG(f_, ...)                                                          \
   {                                                                            \
     if (VERBOSE) {                                                             \
@@ -80,7 +80,7 @@ static uint8_t *map(const char *path, bool _mutable, size_t *size,
 bool has_prep_kernel = false;
 int prepare_kernel() {
   if (!has_prep_kernel) {
-    int ret = init_kerninfra(KERNLOG_KERNRW);
+    int ret = init_kerninfra(KERNLOG_NONE);
     if (ret)
       return ret;
     has_prep_kernel = true;
