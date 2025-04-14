@@ -256,8 +256,10 @@ main(int argc, char *argv[])
             num == FAT_CIGAM_64
         ) {
             NSString *objectRawPath = [targetPath stringByAppendingPathComponent:objectPath];
-
             int decryptStatus =
+                my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
+
+            decryptStatus =
                 my_system([[NSString stringWithFormat:@"fouldecrypt '%@' '%@'", escape_arg(objectRawPath), escape_arg(
                     objectFullPath)] UTF8String]);
             if (decryptStatus != 0) {
