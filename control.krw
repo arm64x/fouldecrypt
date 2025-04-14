@@ -1,6 +1,6 @@
 Package: dev.und3fy.foulfolder.unc0ver
 Name: foulfolder (unc0ver libkrw)
-Version: 0.3.0b
+Version: 0.3.0
 Architecture: iphoneos-arm
 Depends: zip,libkrw
 Description: Directly decrypt binaries like fouldecrypt, but also supports iOS 14

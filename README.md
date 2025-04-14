@@ -3,7 +3,11 @@
 
 It's also available in my Cydia repo: http://repo.misty.moe. FoulDecrypt supports iOS 13.5 and later, and has been tested on iOS 14.2, 14.3 and 13.5 (both arm64 and arm64e).
 
+- Use 0.2.0 and below is original FoulDecrypt, which is a fork of FlexDecrypt. It has been tested on iOS 14.2 and 14.3.
+- Use 0.3.0 for iOS 14.7, other version not tested.
+
 Note: for unsupported versions, it has chances to panic the device, beware ;)
+
 
 ## Why FoulDecrypt
 
