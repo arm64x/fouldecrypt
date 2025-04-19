@@ -220,6 +220,11 @@ main(int argc, char *argv[])
     while (objectPath = [enumerator nextObject])
     {
         NSString *objectFullPath = [tempPath stringByAppendingPathComponent:objectPath];
+
+        if ([objectPath hasSuffix:@".dylib"]) { // don't care about dylibs
+            continue;
+        }
+
         FILE *fp = fopen(objectFullPath.UTF8String, "rb");
         if (!fp)
         {
@@ -256,6 +261,8 @@ main(int argc, char *argv[])
             num == FAT_CIGAM_64
         ) {
             NSString *objectRawPath = [targetPath stringByAppendingPathComponent:objectPath];
+
+            // just try open, skip any return
             int decryptStatus =
                 my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
 
