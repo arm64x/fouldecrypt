@@ -263,10 +263,10 @@ main(int argc, char *argv[])
             NSString *objectRawPath = [targetPath stringByAppendingPathComponent:objectPath];
 
             // just try open, skip any return
-            int decryptStatus =
-                my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
+            // int decryptStatus =
+            //     my_system([[NSString stringWithFormat:@"fouldlopen '%@'", escape_arg(objectRawPath)] UTF8String]);
 
-            decryptStatus =
+            int decryptStatus =
                 my_system([[NSString stringWithFormat:@"fouldecrypt '%@' '%@'", escape_arg(objectRawPath), escape_arg(
                     objectFullPath)] UTF8String]);
             if (decryptStatus != 0) {

@@ -1,6 +1,6 @@
 Package: dev.und3fy.foulfolder.tauri
 Name: foulfolder (Tauri libkernrw0)
-Version: 0.3.3
+Version: 0.3.4
 Architecture: iphoneos-arm
 Depends: zip,libkernrw0
 Description: Directly decrypt binaries like fouldecrypt, but also supports iOS 14
