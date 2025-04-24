@@ -87,24 +87,24 @@ int my_system(const char *ctx)
       w = waitpid(pid, &status, WUNTRACED | WCONTINUED);
       if (w == -1)
       {
-          fprintf(stderr, "waitpid %d, %s (%d)\n", pid, strerror(errno), errno);
+          fprintf(stderr, "[%d] %s\n- waitpid, %s (%d)\n", pid, ctx, strerror(errno), errno);
           return errno;
       }
       if (WIFEXITED(status))
       {
           if (WEXITSTATUS(status) != 0)
           {
-              fprintf(stderr, "pid %d, exited with status %d\n", pid, WEXITSTATUS(status));
+              fprintf(stderr, "[%d] %s\n- exited with status %d\n", pid, ctx, WEXITSTATUS(status));
               return WEXITSTATUS(status);
           }
       }
       else if (WIFSIGNALED(status))
       {
-          fprintf(stderr, "pid %d killed by signal %d\n", pid, WTERMSIG(status));
+          fprintf(stderr, "[%d] %s\n- killed by signal %d, \n", pid, ctx, WTERMSIG(status));
       }
       else if (WIFSTOPPED(status))
       {
-          fprintf(stderr, "pid %d stopped by signal %d\n", pid, WSTOPSIG(status));
+          fprintf(stderr, "[%d] %s\n- stopped by signal %d\n", pid, ctx, WSTOPSIG(status));
       }
       // else if (WIFCONTINUED(status))
       // {
